@@ -56,5 +56,6 @@ namespace DataAccess
         public DbSet<Unit> Units => Set<Unit>();
         public DbSet<RecipesIngredients> RecipesIngredients => Set<RecipesIngredients>();
         public DbSet<RecipeSteps> RecipeSteps => Set<RecipeSteps>();
+        public DbSet<Recipe> Recipes => Set<Recipe>();
     }
 }

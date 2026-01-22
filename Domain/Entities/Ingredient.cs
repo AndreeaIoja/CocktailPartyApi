@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Ingredient : BaseEntity
     {

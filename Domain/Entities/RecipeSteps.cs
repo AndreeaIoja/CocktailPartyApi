@@ -8,8 +8,5 @@
         public string? Description { get; set; }
 
         public virtual required Recipe Recipe { get; set; }
-
-
-
     }
 }
