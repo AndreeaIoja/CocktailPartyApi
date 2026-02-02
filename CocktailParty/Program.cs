@@ -23,12 +23,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(RecipeProfile));
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IMapper, Mapper>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration["Redis:ConnectionString"];
     options.InstanceName = "Cocktail:";
 });
+builder.Services.AddAutoMapper(typeof(RecipeProfile));
+
 
 
 var app = builder.Build();

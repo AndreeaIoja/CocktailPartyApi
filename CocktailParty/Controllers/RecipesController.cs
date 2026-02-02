@@ -7,7 +7,7 @@ namespace CocktailParty.Controllers
     [ApiController]
     [Route("api/[controller]")]
 
-    public class RecipesController : Controller
+    public class RecipesController : ControllerBase
     {
         private readonly IRecipeService _recipeService;
 

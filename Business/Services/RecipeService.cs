@@ -25,7 +25,9 @@ namespace Business.Services
 
             var cached = await _cache.GetStringAsync(cacheKey);
             if (cached != null)
+            {
                 return JsonSerializer.Deserialize<List<RecipeDTO>>(cached);
+            }
 
             var recipes = await _repository.GetRecipesAsync(pageSize, pageCount);
 
