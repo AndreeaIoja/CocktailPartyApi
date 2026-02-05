@@ -1,4 +1,5 @@
 ﻿using Business.Contracts;
+using Business.DTOs;
 using CocktailParty.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,5 +23,13 @@ namespace CocktailParty.Controllers
             var recipes = await _recipeService.GetRecipesAsync(pageRequest.PageSize, pageRequest.PageCount);
             return Ok(recipes);
         }
+
+        [HttpGet("details")]
+        public async Task<ActionResult<RecipeDetailsDTO>> GetRecipeDetails(int id)
+        {
+            var recipeDetails = await _recipeService.GetRecipeDetailsByIdAsync(id);
+            return Ok(recipeDetails);
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Contracts;
 using Business.DTOs;
+using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
@@ -30,14 +31,38 @@ namespace Business.Services
             }
 
             var recipes = await _repository.GetRecipesAsync(pageSize, pageCount);
+            var recipesDTO = recipes == null ? null : _mapper.Map<List<RecipeDTO>>(recipes);
 
             await _cache.SetStringAsync(
             cacheKey,
-            JsonSerializer.Serialize(recipes),
+            JsonSerializer.Serialize(recipesDTO),
             new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
             );
 
-            return recipes == null ? null : _mapper.Map<List<RecipeDTO>>(recipes);
+            return recipesDTO;
+        }
+
+        public async Task<RecipeDetailsDTO?> GetRecipeDetailsByIdAsync(int id)
+        {
+            var cacheKey = $"recipeDetails: {id}";
+
+            var cached = await _cache.GetStringAsync(cacheKey);
+            if (cached != null)
+            {
+                return JsonSerializer.Deserialize<RecipeDetailsDTO>(cached);
+            }
+
+            var recipeDetails = await _repository.GetRecipeDetailsByIdAsync(id);
+            var recipeDetailsDto = recipeDetails == null ? null : _mapper.Map<RecipeDetailsDTO>(recipeDetails);
+
+            await _cache.SetStringAsync(
+            cacheKey,
+            JsonSerializer.Serialize(recipeDetailsDto),
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
+            );
+
+            return recipeDetailsDto;
+
         }
     }
 }
