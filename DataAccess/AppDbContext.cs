@@ -48,6 +48,10 @@ namespace DataAccess
                 .HasIndex(rs => new { rs.RecipeId, rs.StepNumber })
                 .IsUnique();
 
+            modelBuilder.Entity<Recipe>()
+                .HasIndex(r => r.Slug)
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
 
