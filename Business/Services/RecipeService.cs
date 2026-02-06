@@ -42,9 +42,14 @@ namespace Business.Services
             return recipesDTO;
         }
 
-        public async Task<RecipeDetailsDTO?> GetRecipeDetailsByIdAsync(int id)
+        public async Task<RecipeDetailsDTO?> GetRecipeDetailsBySlugAsync(string slug)
         {
-            var cacheKey = $"recipeDetails: {id}";
+            if (string.IsNullOrEmpty(slug))
+            {
+                return null;
+            }
+
+            var cacheKey = $"recipeDetails: {slug}";
 
             var cached = await _cache.GetStringAsync(cacheKey);
             if (cached != null)
@@ -52,7 +57,7 @@ namespace Business.Services
                 return JsonSerializer.Deserialize<RecipeDetailsDTO>(cached);
             }
 
-            var recipeDetails = await _repository.GetRecipeDetailsByIdAsync(id);
+            var recipeDetails = await _repository.GetRecipeDetailsBySlugAsync(slug);
             var recipeDetailsDto = recipeDetails == null ? null : _mapper.Map<RecipeDetailsDTO>(recipeDetails);
 
             await _cache.SetStringAsync(

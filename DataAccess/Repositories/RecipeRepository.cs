@@ -23,7 +23,7 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Recipe> GetRecipeDetailsByIdAsync(int id)
+        public async Task<Recipe?> GetRecipeDetailsBySlugAsync(string slug)
         {
             return await _appDbContext.Recipes
                 .AsNoTracking()
@@ -32,7 +32,7 @@ namespace DataAccess.Repositories
                 .Include(r => r.RecipesIngredients)
                   .ThenInclude(z => z.Unit)
                 .Include(y => y.RecipeSteps)
-                .FirstAsync(recipe => recipe.Id == id);
+                .FirstOrDefaultAsync(recipe => recipe.Slug.Equals(slug));
         }
     }
 }

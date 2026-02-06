@@ -25,9 +25,15 @@ namespace CocktailParty.Controllers
         }
 
         [HttpGet("details")]
-        public async Task<ActionResult<RecipeDetailsDTO>> GetRecipeDetails(int id)
+        public async Task<ActionResult<RecipeDetailsDTO>> GetRecipeDetails(string slug)
         {
-            var recipeDetails = await _recipeService.GetRecipeDetailsByIdAsync(id);
+            var recipeDetails = await _recipeService.GetRecipeDetailsBySlugAsync(slug);
+
+            if (recipeDetails is null)
+            {
+                return NotFound();
+            }
+
             return Ok(recipeDetails);
         }
 

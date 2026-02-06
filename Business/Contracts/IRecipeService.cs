@@ -6,6 +6,6 @@ namespace Business.Contracts
     {
         Task<List<RecipeDTO>?> GetRecipesAsync(int pageSize, int pageCount);
 
-        Task<RecipeDetailsDTO?> GetRecipeDetailsByIdAsync(int id);
+        Task<RecipeDetailsDTO?> GetRecipeDetailsBySlugAsync(string slug);
     }
 }

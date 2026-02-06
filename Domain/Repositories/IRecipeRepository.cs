@@ -5,6 +5,6 @@ namespace Domain.Repositories
     public interface IRecipeRepository
     {
         Task<List<Recipe>?> GetRecipesAsync(int pageSize, int pageCount);
-        Task<Recipe> GetRecipeDetailsByIdAsync(int id);
+        Task<Recipe?> GetRecipeDetailsBySlugAsync(string slug);
     }
 }
