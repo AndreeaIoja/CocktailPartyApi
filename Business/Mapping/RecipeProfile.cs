@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.DTOs;
+using Business.Helpers;
 using Domain.Entities;
 
 namespace Business.Mapping
@@ -47,6 +48,10 @@ namespace Business.Mapping
                );
 
            CreateMap<RecipeSteps, RecipeStepDTO>();
+
+           CreateMap<PagedList<Recipe>, RecipesPageDTO>()
+            .ForMember(dest => dest.Recipes, opt => opt.MapFrom(src => src.Items))
+            .ForMember(dest => dest.IsLastPage, opt => opt.MapFrom(src => src.IsLastPage));
 
         }
     }

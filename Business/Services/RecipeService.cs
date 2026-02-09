@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Contracts;
 using Business.DTOs;
+using Business.Helpers;
 using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.Extensions.Caching.Distributed;
@@ -20,26 +21,43 @@ namespace Business.Services
             _mapper = mapper;
             _cache = cache;
         }
-        public async Task<List<RecipeDTO>?> GetRecipesAsync(int pageSize, int pageCount)
+        public async Task<RecipesPageDTO> GetRecipesAsync(int pageSize, int pageCount)
         {
             var cacheKey = $"recipes:page:{pageCount}:size:{pageSize}";
 
             var cached = await _cache.GetStringAsync(cacheKey);
-            if (cached != null)
+
+            if (!string.IsNullOrEmpty(cached))
             {
-                return JsonSerializer.Deserialize<List<RecipeDTO>>(cached);
+                return JsonSerializer.Deserialize<RecipesPageDTO>(cached) ?? new RecipesPageDTO
+                {
+                    Recipes = new List<RecipeDTO>(),
+                    IsLastPage = true
+                };
             }
 
             var recipes = await _repository.GetRecipesAsync(pageSize, pageCount);
-            var recipesDTO = recipes == null ? null : _mapper.Map<List<RecipeDTO>>(recipes);
+            var recipesCount = await _repository.GetRecipesCountAync();
+
+            if (recipes == null || !recipes.Any())
+            {
+                return new RecipesPageDTO
+                { 
+                    Recipes = new List<RecipeDTO>(),
+                    IsLastPage = true
+                };
+            }
+
+            var pagedRecipes = new PagedList<Recipe>(recipes, pageCount, pageSize, recipesCount);
+            var recipesPageDto = _mapper.Map<RecipesPageDTO>(pagedRecipes);
 
             await _cache.SetStringAsync(
             cacheKey,
-            JsonSerializer.Serialize(recipesDTO),
+            JsonSerializer.Serialize(recipesPageDto),
             new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
             );
 
-            return recipesDTO;
+            return recipesPageDto;
         }
 
         public async Task<RecipeDetailsDTO?> GetRecipeDetailsBySlugAsync(string slug)
