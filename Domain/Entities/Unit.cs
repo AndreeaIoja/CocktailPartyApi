@@ -3,9 +3,9 @@
     public class Unit : BaseEntity
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Abbr { get; set; }
+        public required string Name { get; set; }
+        public required string Abbr { get; set; }
 
-        public virtual ICollection<RecipesIngredients>? RecipesIngredients { get; set; }
+        public required virtual ICollection<RecipesIngredients> RecipesIngredients { get; set; }
     }
 }
