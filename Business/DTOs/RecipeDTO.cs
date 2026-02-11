@@ -2,7 +2,7 @@
 {
     public record RecipeDTO
     {
-        public int Id { get; set; }
+        public required int Id { get; set; }
         public required string Title { get; set; }
         public required string ImagePath { get; set; }
         public required string Note { get; set; }

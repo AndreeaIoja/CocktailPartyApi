@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities
 {
     public class Recipe : BaseEntity
     {
-        public int Id { get; set; }
+        public required int Id { get; set; }
 
         public required string Title { get; set; }
         public required string ImagePath { get; set; }
