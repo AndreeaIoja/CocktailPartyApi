@@ -34,5 +34,10 @@ namespace DataAccess.Repositories
                 .Include(y => y.RecipeSteps)
                 .FirstOrDefaultAsync(recipe => recipe.Slug.Equals(slug));
         }
+
+        public async Task<int> GetRecipesCountAync()
+        {
+            return await _appDbContext.Recipes.CountAsync();
+        }
     }
 }
