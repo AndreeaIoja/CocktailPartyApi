@@ -4,7 +4,7 @@ namespace Domain.Entities
 {
     public class Recipe : BaseEntity
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         public required string Title { get; set; }
         public required string ImagePath { get; set; }
