@@ -2,9 +2,11 @@ using AutoMapper;
 using Business.Contracts;
 using Business.Mapping;
 using Business.Services;
+using CocktailParty.Extensions;
 using DataAccess;
 using DataAccess.Repositories;
 using Domain.Repositories;
+using Meilisearch;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -20,8 +22,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString"));
 }
 );
+builder.Services.AddMeilisearch(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(RecipeProfile));
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IMeiliSearchService, MeiliSearchService>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
