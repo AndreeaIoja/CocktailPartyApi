@@ -39,5 +39,10 @@ namespace DataAccess.Repositories
         {
             return await _appDbContext.Recipes.CountAsync();
         }
+
+        public async Task<List<Recipe>?> GetAllRecipesAsync()
+        {
+            return await _appDbContext.Recipes.ToListAsync();
+        }
     }
 }
