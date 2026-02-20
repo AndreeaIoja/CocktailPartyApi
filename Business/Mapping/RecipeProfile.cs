@@ -45,9 +45,17 @@ namespace Business.Mapping
                .ForMember(
                    dest => dest.UnitAbbr,
                    opt => opt.MapFrom(src => src.Unit.Abbr)
+               )
+               .ForMember(
+                   dest => dest.Quantity,
+                   opt => opt.MapFrom(src => src.Quantity)
+               )
+               .ForMember(
+                   dest => dest.Note,
+                   opt => opt.MapFrom(src => src.Note)
                );
 
-           CreateMap<RecipeSteps, RecipeStepDTO>();
+            CreateMap<RecipeSteps, RecipeStepDTO>();
 
            CreateMap<PagedList<Recipe>, RecipesPageDTO>()
             .ForMember(dest => dest.Recipes, opt => opt.MapFrom(src => src.Items))
