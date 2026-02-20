@@ -6,6 +6,6 @@ namespace Business.Contracts
     {
         Task IndexRecipesAsync();
         Meilisearch.Index GetIndex(string indexName);
-        Task<IEnumerable<RecipeDTO>> SearchAsync(string query);
+        Task<IEnumerable<RecipeDTO>> SearchRecipesAsync(string query);
     }
 }

@@ -50,7 +50,7 @@ namespace Business.Services
             return _client.Index(indexName);
         }
 
-        public async Task<IEnumerable<RecipeDTO>> SearchAsync(string query)
+        public async Task<IEnumerable<RecipeDTO>> SearchRecipesAsync(string query)
         {
             var index = _client.Index("recipes");
             var results = await index.SearchAsync<RecipeDTO>(query);

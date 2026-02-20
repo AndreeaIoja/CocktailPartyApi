@@ -20,10 +20,10 @@ namespace CocktailParty.Controllers
             return Ok("Indexare completă");
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> Search(string query)
+        [HttpGet("searchRecipes")]
+        public async Task<IActionResult> SearchRecipes([FromQuery] string query)
         {
-            var results = await _meiliSearchService.SearchAsync(query);
+            var results = await _meiliSearchService.SearchRecipesAsync(query);
             return Ok(results);
         }
     }
