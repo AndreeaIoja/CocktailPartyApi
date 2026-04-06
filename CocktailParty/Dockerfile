@@ -18,7 +18,6 @@ COPY ["DataAccess/DataAccess.csproj", "DataAccess/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 RUN dotnet restore "./CocktailParty/CocktailParty.csproj"
 COPY . .
-WORKDIR "/src/."
 RUN dotnet build "./CocktailParty/CocktailParty.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
