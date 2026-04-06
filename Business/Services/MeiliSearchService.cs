@@ -30,7 +30,7 @@ namespace Business.Services
             var indexes = await _client.GetAllIndexesAsync();
             if (!indexes.Results.Any(i => i.Uid == indexName))
             {
-                await _client.CreateIndexAsync(indexName, "Id");
+                await _client.CreateIndexAsync(indexName, "id");
             }
 
             var index = _client.Index(indexName);

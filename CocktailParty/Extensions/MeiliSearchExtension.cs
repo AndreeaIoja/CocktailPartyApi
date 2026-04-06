@@ -7,7 +7,7 @@ namespace CocktailParty.Extensions
         public static IServiceCollection AddMeilisearch(this IServiceCollection services, IConfiguration config)
         {
             var host = config["Meili:Host"];
-            var apiKey = config["Meili:MeiliSearchPassword"];
+            var apiKey = config["Meili:MeiliSearchKey"];
 
             services.AddSingleton(sp => new MeilisearchClient(host, apiKey));
 
