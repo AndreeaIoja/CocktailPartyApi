@@ -1,4 +1,5 @@
 ﻿using Business.Contracts;
+using Business.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CocktailParty.Controllers
@@ -21,7 +22,7 @@ namespace CocktailParty.Controllers
         }
 
         [HttpGet("searchRecipes")]
-        public async Task<IActionResult> SearchRecipes([FromQuery] string query)
+        public async Task<ActionResult<IEnumerable<RecipeDTO>>> SearchRecipes([FromQuery] string query)
         {
             var results = await _meiliSearchService.SearchRecipesAsync(query);
             return Ok(results);
