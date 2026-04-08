@@ -11,7 +11,9 @@ namespace CocktailParty.Extensions
                 .WriteTo.File(
                     "logs/api-.log",
                     rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 14)
+                    retainedFileCountLimit: 14,
+                    outputTemplate:
+                        "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
 
             builder.Host.UseSerilog();
@@ -32,7 +34,8 @@ namespace CocktailParty.Extensions
                     {
                         Log.Error(
                             exceptionFeature.Error,
-                            "Unhandled exception occurred");
+                            "Unhandled exception occurred at {Path}",
+                            context.Request.Path);
                     }
 
                     context.Response.StatusCode = 500;
