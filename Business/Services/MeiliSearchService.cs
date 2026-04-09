@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Contracts;
 using Business.DTOs;
+using Business.Helpers;
 using Domain.Repositories;
 using Meilisearch;
 
@@ -50,11 +51,27 @@ namespace Business.Services
             return _client.Index(indexName);
         }
 
-        public async Task<IEnumerable<RecipeDTO>> SearchRecipesAsync(string query)
+        public async Task<RecipesPageDTO> SearchRecipesAsync(string? query, int pageSize, int pageNumber)
         {
+            if (string.IsNullOrEmpty(query))
+            {
+                return _mapper.Map<RecipesPageDTO>(new PagedList<RecipeDTO>(null, pageNumber, pageSize, 0));
+            }
+
             var index = _client.Index("recipes");
-            var results = await index.SearchAsync<RecipeDTO>(query);
-            return results.Hits;
+
+            var searchOptions = new SearchQuery
+            {
+                HitsPerPage = pageSize,
+                Page = pageNumber
+            };
+            dynamic results = await index.SearchAsync<RecipeDTO>(query, searchOptions);
+
+            var pagedRecipes = new PagedList<RecipeDTO>(results.Hits, pageNumber, pageSize, results.TotalHits);
+            var recipesPageDto = _mapper.Map<RecipesPageDTO>(pagedRecipes);
+
+            return recipesPageDto;
+           
         }
     }
 }

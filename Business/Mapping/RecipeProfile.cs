@@ -57,10 +57,14 @@ namespace Business.Mapping
 
             CreateMap<RecipeSteps, RecipeStepDTO>();
 
-           CreateMap<PagedList<Recipe>, RecipesPageDTO>()
+            CreateMap<PagedList<Recipe>, RecipesPageDTO>()
             .ForMember(dest => dest.Recipes, opt => opt.MapFrom(src => src.Items))
             .ForMember(dest => dest.IsLastPage, opt => opt.MapFrom(src => src.IsLastPage));
 
+            CreateMap<PagedList<RecipeDTO>, RecipesPageDTO>()
+            .ForMember(dest => dest.Recipes, opt => opt.MapFrom(src => src.Items))
+            .ForMember(dest => dest.IsLastPage, opt => opt.MapFrom(src => src.IsLastPage))
+            .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.TotalCount));
         }
     }
 }

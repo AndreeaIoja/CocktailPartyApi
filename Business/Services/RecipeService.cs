@@ -21,9 +21,9 @@ namespace Business.Services
             _mapper = mapper;
             _cache = cache;
         }
-        public async Task<RecipesPageDTO> GetRecipesAsync(int pageSize, int pageCount)
+        public async Task<RecipesPageDTO> GetRecipesAsync(int pageSize, int pageNumber)
         {
-            var cacheKey = $"recipes:page:{pageCount}:size:{pageSize}";
+            var cacheKey = $"recipes:page:{pageNumber}:size:{pageSize}";
 
             var cached = await _cache.GetStringAsync(cacheKey);
 
@@ -36,7 +36,7 @@ namespace Business.Services
                 };
             }
 
-            var recipes = await _repository.GetRecipesAsync(pageSize, pageCount);
+            var recipes = await _repository.GetRecipesAsync(pageSize, pageNumber);
             var recipesCount = await _repository.GetRecipesCountAync();
 
             if (recipes == null || !recipes.Any())
@@ -48,7 +48,7 @@ namespace Business.Services
                 };
             }
 
-            var pagedRecipes = new PagedList<Recipe>(recipes, pageCount, pageSize, recipesCount);
+            var pagedRecipes = new PagedList<Recipe>(recipes, pageNumber, pageSize, recipesCount);
             var recipesPageDto = _mapper.Map<RecipesPageDTO>(pagedRecipes);
 
             await _cache.SetStringAsync(

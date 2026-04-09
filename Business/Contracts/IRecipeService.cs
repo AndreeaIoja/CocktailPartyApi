@@ -4,7 +4,7 @@ namespace Business.Contracts
 {
     public interface IRecipeService
     {
-        Task<RecipesPageDTO> GetRecipesAsync(int pageSize, int pageCount);
+        Task<RecipesPageDTO> GetRecipesAsync(int pageSize, int pageNumber);
 
         Task<RecipeDetailsDTO?> GetRecipeDetailsBySlugAsync(string slug);
     }

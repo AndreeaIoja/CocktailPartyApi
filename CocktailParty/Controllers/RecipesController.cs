@@ -20,7 +20,7 @@ namespace CocktailParty.Controllers
         [HttpGet(Name = "GetRecipes")]
         public async Task<ActionResult<RecipesPageDTO>> GetRecipes([FromQuery] PageRequestDTO pageRequest)
         {
-            var recipes = await _recipeService.GetRecipesAsync(pageRequest.PageSize, pageRequest.PageCount);
+            var recipes = await _recipeService.GetRecipesAsync(pageRequest.PageSize, pageRequest.pageNumber);
             return Ok(recipes);
         }
 

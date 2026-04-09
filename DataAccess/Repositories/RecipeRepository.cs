@@ -13,12 +13,12 @@ namespace DataAccess.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<List<Recipe>?> GetRecipesAsync(int pageSize, int pageCount)
+        public async Task<List<Recipe>?> GetRecipesAsync(int pageSize, int pageNumber)
         {
             return await _appDbContext.Recipes
                 .AsNoTracking()
                 .OrderBy (x => x.Id)
-                .Skip((pageCount - 1) * pageSize)
+                .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
