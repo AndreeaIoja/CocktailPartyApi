@@ -1,4 +1,3 @@
-using AutoMapper;
 using Business.Contracts;
 using Business.Mapping;
 using Business.Services;
@@ -6,7 +5,6 @@ using CocktailParty.Extensions;
 using DataAccess;
 using DataAccess.Repositories;
 using Domain.Repositories;
-using Meilisearch;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -33,10 +31,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "Cocktail:";
 });
 builder.Services.AddAutoMapper(typeof(RecipeProfile));
-
-
+builder.AddCustomLogging();
 
 var app = builder.Build();
+app.UseGlobalExceptionHandling();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
