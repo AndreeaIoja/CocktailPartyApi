@@ -1,6 +1,7 @@
 ﻿using Business.Contracts;
 using Business.DTOs;
 using CocktailParty.DTOs;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,24 +27,50 @@ namespace CocktailParty.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserResponseDTO?>> Login(UserRequestDTO request)
         {
-            var result = await authService.LoginAsync(request.Email, request.Password);
-            if (result is null)
+            var (userResponse, refreshToken) = await authService.LoginAsync(request.Email, request.Password);
+            if ( userResponse is null || refreshToken is null )
             {
                 return BadRequest($"Failed to login {nameof(Login)}");
             }
-            return Ok(result);
+
+            Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/api/identity/refresh-token"
+            });
+
+            return Ok(userResponse);
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<UserResponseDTO?>> RefreshToken(RefreshTokenRequestDTO request)
+        public async Task<ActionResult<UserResponseDTO?>> RefreshToken(Guid userId)
         {
-            var response = await authService.RefreshTokensAsync(request.UserId, request.RefreshToken);
-            if (response is null || response.RefreshToken is null || response.Token is null)
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized("Refresh token missing");
+            }
+
+            var (userResponse, newRefreshToken) = await authService.RefreshTokensAsync(userId, refreshToken);
+            if (userResponse is null || newRefreshToken is null || userResponse.Token is null)
             {
                 return Unauthorized("You are unauthorized");
             }
 
-            return Ok(response);
+            Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/api/identity/refresh-token"
+            });
+
+            return Ok(userResponse);
         }
 
         [Authorize]

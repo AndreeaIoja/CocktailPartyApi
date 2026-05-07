@@ -15,18 +15,18 @@ namespace Business.Services
 {
     public class AuthService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper) : IAuthService
     {
-        public async Task<UserResponseDTO?> LoginAsync(string email, string password)
+        public async Task<(UserResponseDTO? response, string? refreshToken)> LoginAsync(string email, string password)
         {
             var user = await userRepository.GetUserByEmailAsync(email);
             if (user is null)
             {
-                return null;
+                return (null, null);
             }
 
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, password)
                 == PasswordVerificationResult.Failed)
             {
-                return null;
+                return (null, null);
             }
 
             var response = await CreateTokenResponse(user);
@@ -50,26 +50,29 @@ namespace Business.Services
             return mapper.Map<UserResponseDTO>(user);
         }
 
-        public async Task<UserResponseDTO?> RefreshTokensAsync(Guid userId, string refreshToken)
+        public async Task<(UserResponseDTO? response, string refreshToken)> RefreshTokensAsync(Guid userId, string refreshToken)
         {
             var user = await ValidateRefreshTokenAsync(userId, refreshToken);
             if (user is null)
             {
-                return null;
+                return (null, null);
             }
 
             return await CreateTokenResponse(user);
         }
 
-        private async Task<UserResponseDTO> CreateTokenResponse(User user)
+        private async Task<(UserResponseDTO response, string refreshToken)> CreateTokenResponse(User user)
         {
-            return new UserResponseDTO
+            var refreshToken = await GenerateAndSaveRefreshTokenAsync(user);
+            var response = new UserResponseDTO
             {
                 Id= user.Id,
                 Email = user.Email,
                 Token = CreateToken(user),
                 RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
             };
+
+            return (response, refreshToken); 
         }
 
         private string CreateToken(User user)
