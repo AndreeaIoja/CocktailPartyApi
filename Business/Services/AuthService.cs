@@ -50,9 +50,9 @@ namespace Business.Services
             return mapper.Map<UserResponseDTO>(user);
         }
 
-        public async Task<(UserResponseDTO? response, string refreshToken)> RefreshTokensAsync(Guid userId, string refreshToken)
+        public async Task<(UserResponseDTO? response, string refreshToken)> RefreshTokensAsync(string refreshToken)
         {
-            var user = await ValidateRefreshTokenAsync(userId, refreshToken);
+            var user = await ValidateRefreshTokenAsync(refreshToken);
             if (user is null)
             {
                 return (null, null);
@@ -112,9 +112,9 @@ namespace Business.Services
             return refreshToken;
         }
 
-        private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
+        private async Task<User?> ValidateRefreshTokenAsync(string refreshToken)
         {
-            var user = await userRepository.GetUserByIdAsync(userId);
+            var user = await userRepository.GetUserByRefreshTokenAsync(refreshToken);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
                 return null;

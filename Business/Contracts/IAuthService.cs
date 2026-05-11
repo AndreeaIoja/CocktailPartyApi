@@ -6,6 +6,6 @@ namespace Business.Contracts
     {
         Task<UserResponseDTO?> RegisterAsync(string email, string password);
         Task<(UserResponseDTO? response, string refreshToken)> LoginAsync(string email, string password);
-        Task<(UserResponseDTO? response, string refreshToken)> RefreshTokensAsync(Guid userId, string refreshToken);
+        Task<(UserResponseDTO? response, string refreshToken)> RefreshTokensAsync(string refreshToken);
     }
 }

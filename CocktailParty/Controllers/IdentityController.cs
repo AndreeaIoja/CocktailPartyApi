@@ -30,7 +30,7 @@ namespace CocktailParty.Controllers
             var (userResponse, refreshToken) = await authService.LoginAsync(request.Email, request.Password);
             if ( userResponse is null || refreshToken is null )
             {
-                return BadRequest($"Failed to login {nameof(Login)}");
+                return Unauthorized("Invalid credentials");
             }
 
             Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
@@ -46,7 +46,7 @@ namespace CocktailParty.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<UserResponseDTO?>> RefreshToken(Guid userId)
+        public async Task<ActionResult<UserResponseDTO?>> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
@@ -55,7 +55,7 @@ namespace CocktailParty.Controllers
                 return Unauthorized("Refresh token missing");
             }
 
-            var (userResponse, newRefreshToken) = await authService.RefreshTokensAsync(userId, refreshToken);
+            var (userResponse, newRefreshToken) = await authService.RefreshTokensAsync(refreshToken);
             if (userResponse is null || newRefreshToken is null || userResponse.Token is null)
             {
                 return Unauthorized("You are unauthorized");

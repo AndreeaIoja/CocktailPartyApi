@@ -26,9 +26,9 @@ namespace DataAccess.Repositories
             return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<User?> GetUserByIdAsync(Guid userId)
+        public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
         {
-            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
         }
 
         public async Task<User> UpdateUserAsync(User user, string? refreshToken)
