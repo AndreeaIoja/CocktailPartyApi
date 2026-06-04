@@ -61,5 +61,6 @@ namespace DataAccess
         public DbSet<RecipesIngredients> RecipesIngredients => Set<RecipesIngredients>();
         public DbSet<RecipeSteps> RecipeSteps => Set<RecipeSteps>();
         public DbSet<Recipe> Recipes => Set<Recipe>();
+        public DbSet<User> Users => Set<User>();
     }
 }
